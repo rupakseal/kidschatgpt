@@ -6,7 +6,7 @@ type Msg = { role: "user"|"assistant"; content: string };
 
 export default function ChatBox() {
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Hi! I’m your friendly study buddy. What would you like to learn today?" }
+    { role: "assistant" as const, content: "Hi! I’m your friendly study buddy. What would you like to learn today?" }
   ]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -32,7 +32,7 @@ export default function ChatBox() {
     }
 
     if (!input.trim()) return;
-    const newMsgs = [...messages, { role: "user", content: input.trim() }];
+    const newMsgs: Msg[] = [...messages, { role: "user" as const, content: input.trim() }];
     setMessages(newMsgs);
     setInput("");
     setBusy(true);
@@ -45,7 +45,7 @@ export default function ChatBox() {
       });
       const data = await res.json();
       const content = data?.choices?.[0]?.message?.content || "Hmm, I had trouble replying. Can we try again?";
-      setMessages(m => [...m, { role: "assistant", content }]);
+      setMessages((m) => [...m, { role: "assistant" as const, content }]);
       // increment cap
       const used = Number(localStorage.getItem(dayKey) || "0");
       localStorage.setItem(dayKey, String(used + 1));
